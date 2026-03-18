@@ -1,0 +1,25 @@
+# Terraform secrets and state — NEVER commit these
+terraform/terraform.tfvars
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/*.tfstate
+terraform/*.tfstate.backup
+terraform/crash.log
+
+# Runtime config generated from Terraform outputs at deploy time
+app/config.json
+
+# Node dependencies
+node_modules/
+lambda/router/node_modules/
+
+# Stray Terraform state outside the terraform/ directory
+scripts/terraform.tfstate
+terraform/modules/lambda/router.zip
+terraform/modules/lambda/pruner.zip
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>S3Email</title>
+  <link rel="stylesheet" href="/app/styles.css" />
+</head>
+<body>
+
+  <!-- ------------------------------------------------------------------ -->
+  <!-- Auth screen — shown before login                                    -->
+  <!-- ------------------------------------------------------------------ -->
+  <div id="auth-screen" class="screen">
+    <div class="auth-box">
+      <h1>S3Email</h1>
+      <p class="auth-subtitle">Serverless email reader</p>
+      <button id="login-btn" class="btn btn-primary btn-large">Sign in</button>
+      <p id="auth-error" class="error hidden"></p>
+    </div>
+  </div>
+
+  <!-- ------------------------------------------------------------------ -->
+  <!-- App shell — shown after login                                       -->
+  <!-- ------------------------------------------------------------------ -->
+  <div id="app-screen" class="screen hidden">
+
+    <!-- Sidebar -->
+    <nav id="sidebar">
+      <div class="sidebar-header">
+        <span id="user-email" class="user-email"></span>
+        <button id="logout-btn" class="btn btn-ghost btn-small">Sign out</button>
+      </div>
+      <ul class="folder-list">
+        <li><button class="folder-btn active" data-folder="inbox">
+          <span class="folder-icon">📥</span> Inbox
+          <span id="badge-inbox" class="badge hidden"></span>
+        </button></li>
+        <li><button class="folder-btn" data-folder="spam">
+          <span class="folder-icon">⚠️</span> Spam
+        </button></li>
+        <li><button class="folder-btn" data-folder="quarantine">
+          <span class="folder-icon">🚫</span> Quarantine
+        </button></li>
+        <li><button class="folder-btn" data-folder="trash">
+          <span class="folder-icon">🗑️</span> Trash
+        </button></li>
+      </ul>
+    </nav>
+
+    <!-- Main content area -->
+    <main id="main">
+
+      <!-- Email list pane -->
+      <section id="list-pane">
+        <div class="list-toolbar">
+          <label id="select-all-wrap" class="select-all-wrap hidden" title="Select all">
+            <input type="checkbox" id="select-all-cb" />
+          </label>
+          <h2 id="folder-title">Inbox</h2>
+          <span id="list-count" class="list-count"></span>
+          <button id="bulk-delete-btn" class="btn btn-danger btn-small hidden">
+            Delete (<span id="bulk-count">0</span>)
+          </button>
+        </div>
+        <div id="email-list" class="email-list">
+          <div id="list-loading" class="loading">Loading…</div>
+          <div id="list-empty" class="empty hidden">No messages</div>
+        </div>
+      </section>
+
+      <!-- Email detail pane — hidden until an email is opened -->
+      <section id="detail-pane" class="hidden">
+        <div class="detail-toolbar">
+          <button id="back-btn" class="btn btn-ghost">← Back</button>
+          <div class="detail-actions">
+            <button id="mark-unread-btn" class="btn btn-secondary btn-small">Mark unread</button>
+            <button id="delete-btn" class="btn btn-danger btn-small">Delete</button>
+            <button id="restore-btn" class="btn btn-secondary btn-small hidden">Restore</button>
+            <button id="perma-delete-btn" class="btn btn-danger btn-small hidden">Delete permanently</button>
+          </div>
+        </div>
+
+        <!-- Quarantine warning banner -->
+        <div id="quarantine-banner" class="quarantine-banner hidden">
+          <strong>⚠ VIRUS DETECTED</strong> — This message was quarantined. The body and attachments
+          were not stored and cannot be displayed.
+        </div>
+
+        <!-- Email header summary -->
+        <div id="email-header" class="email-header">
+          <div class="email-from"></div>
+          <div class="email-subject"></div>
+          <div class="email-meta"></div>
+        </div>
+
+        <!-- Security verdict badges (shown for spam / flagged verdicts) -->
+        <div id="verdict-bar" class="verdict-bar hidden"></div>
+
+        <!-- Attachments list -->
+        <div id="attachments" class="attachments hidden"></div>
+
+        <!-- Body render area -->
+        <div id="body-area" class="body-area">
+          <div id="body-loading" class="loading hidden">Loading…</div>
+          <!-- sandboxed iframe keeps email HTML isolated from app DOM -->
+          <iframe id="body-iframe"
+            sandbox="allow-same-origin allow-popups"
+            referrerpolicy="no-referrer"
+            class="body-iframe hidden">
+          </iframe>
+          <pre id="body-text" class="body-text hidden"></pre>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Prevent AWS SDK "unenv" Node shims from trying to read local files in browser. -->
+  <script>
+    // Ensure a minimal `process.env` exists so bundled SDKs won't attempt
+    // to load shared config from the filesystem (which triggers fs.readFile).
+    if (!window.process) window.process = { env: {} };
+    window.process.env.AWS_SDK_LOAD_CONFIG = 'false';
+  </script>
+
+  <!-- Load AWS SDK v2 (browser global `AWS`) so `makeS3Client` can use it. -->
+  <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1350.0.min.js"></script>
+
+  <script type="module" src="/app/app.js"></script>
+</body>
+</html>

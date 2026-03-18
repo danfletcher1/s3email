@@ -1,0 +1,9 @@
+{
+  "name": "s3email-pruner",
+  "version": "1.0.0",
+  "description": "S3 lifecycle expiry pruner for s3email — removes expired email UUIDs from index files (body/attachments are expired by S3 lifecycle directly)",
+  "main": "index.js",
+  "engines": {
+    "node": ">=20"
+  }
+}

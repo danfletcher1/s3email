@@ -1,0 +1,12 @@
+{
+  "name": "s3email-router",
+  "version": "1.0.0",
+  "description": "SES email router and processor for s3email — receives emails via SES, parses MIME, routes to S3",
+  "main": "index.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "mailparser": "^3.7.0"
+  }
+}

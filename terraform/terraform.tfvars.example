@@ -1,0 +1,36 @@
+# Copy this file to terraform.tfvars and fill in your values.
+# terraform.tfvars is gitignored and must never be committed.
+
+# AWS region to deploy all resources into
+aws_region = "YOUR_AWS_REGION"  # e.g. "eu-west-1"
+
+# The S3 bucket name to create (must be globally unique)
+bucket_name = "YOUR_BUCKET_NAME"  # e.g. "mycompany-email"
+
+# The domain name SES is already configured for
+domain_name = "YOUR_DOMAIN_NAME"  # e.g. "example.com"
+
+# The name for the SES receipt rule set (Terraform will create and activate it)
+ses_rule_set_name = "s3email-ruleset"  # e.g. "s3email-ruleset"
+
+# Subdomain prefix for the Cognito Hosted UI
+# Full URL will be: https://{cognito_domain_prefix}.auth.{region}.amazoncognito.com
+cognito_domain_prefix = "YOUR_COGNITO_DOMAIN_PREFIX"  # e.g. "mycompany-email"
+
+# Number of days before soft-deleted emails are permanently removed from S3
+trash_retention_days = 30
+
+# Number of days before spam emails are automatically removed from S3
+spam_retention_days = 30
+
+# Number of days before quarantined emails are automatically removed from S3
+quarantine_retention_days = 30
+
+# Days before email body/attachment objects (>128 KB) move to Standard-IA (lower at-rest cost)
+cold_ia_days = 60
+
+# Days before email body/attachment objects (>128 KB) move to Glacier Instant Retrieval (millisecond access, lowest cost)
+cold_glacier_days = 210
+
+# Email address to send CloudWatch alarm notifications to
+alarm_notification_email = "YOUR_EMAIL_ADDRESS"  # e.g. "admin@example.com"
